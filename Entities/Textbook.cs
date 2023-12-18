@@ -1,6 +1,6 @@
 ﻿namespace BookApp.Entities
 {
-    public class Textbooks : Book
+    public class Textbook : Book
     {
         public override string ToString() => base.ToString() + "(TextBook)";
     }

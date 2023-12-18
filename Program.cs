@@ -16,10 +16,10 @@ static void AddBook(IRepository<Book> bookRepository)
     bookRepository.Add(new Book { Title = "Natalia" });
     bookRepository.Save();
 }
-static void AddTextbooks(IWriteRepository<Textbooks> textbookRepository)
+static void AddTextbooks(IWriteRepository<Textbook> textbookRepository)
 {
-    textbookRepository.Add(new Textbooks { Title = "Lena" });
-    textbookRepository.Add(new Textbooks { Title = "Natalia" });
+    textbookRepository.Add(new Textbook { Title = "Lena" });
+    textbookRepository.Add(new Textbook { Title = "Natalia" });
     textbookRepository.Save();
 }
 
