@@ -1,27 +1,33 @@
-﻿using BookApp.Entities;
+﻿using BookApp.Data;
+using BookApp.Entities;
 using BookApp.Repositories;
-using BookApp.Data;
+using BookApp.Repositories.Extension;
 
 
 var bookRepository = new SqlRepository<Book>(new BookAppDbContext());
 
 AddBook(bookRepository);
-AddTextbooks(bookRepository);
 WriteAllToConsole(bookRepository);
 
 static void AddBook(IRepository<Book> bookRepository)
 {
-    bookRepository.Add(new Book { Title = "Ala" });
-    bookRepository.Add(new Book { Title = "Lena" });
-    bookRepository.Add(new Book { Title = "Natalia" });
-    bookRepository.Save();
+    var books = new[]
+    {
+        new Book { Title = "Ala" },
+        new Book { Title = "Lena" },
+        new Book { Title = "asia" }
+    };
+    bookRepository.AddBatch(books);
+    "string".AddBatch(books);
+
+    //AddBatch(bookRepository, books);
+
+    //bookRepository.Add(new Book { Title = "Ala" });
+    //bookRepository.Add(new Book { Title = "Lena" });
+    //bookRepository.Add(new Book { Title = "Natalia" });
+    //bookRepository.Save();
 }
-static void AddTextbooks(IWriteRepository<Textbook> textbookRepository)
-{
-    textbookRepository.Add(new Textbook { Title = "Lena" });
-    textbookRepository.Add(new Textbook { Title = "Natalia" });
-    textbookRepository.Save();
-}
+
 
 static void WriteAllToConsole(IReadRepository<IEntity> repository)
 {
