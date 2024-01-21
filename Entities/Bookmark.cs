@@ -16,7 +16,7 @@ namespace BookApp.Entities
             StringBuilder sb = new(1024);
             sb.AppendLine($"{Name} Id: {Id}");
             sb.AppendLine($"Color: {Color} Dimension: {Dimension}");
-            sb.AppendLine($"Cost: {StandarCost } Price: {ListPrice}");
+            sb.AppendLine($"Cost: {StandarCost} Price: {ListPrice}");
             if (NameLenght.HasValue)
             {
                 sb.AppendLine($"Name Lenght {NameLenght}");
@@ -25,9 +25,9 @@ namespace BookApp.Entities
             {
                 sb.AppendLine($"Total Sales {TotalSales}");
             }
-                return sb.ToString();
+            return sb.ToString();
             #endregion
         }
     }
 }
-   
+

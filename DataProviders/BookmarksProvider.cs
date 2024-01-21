@@ -1,29 +1,28 @@
-﻿using BookApp.Entities;
+﻿using BookApp.DataProviders.Extension;
+using BookApp.Entities;
 using BookApp.Repositories;
-using BookApp.DataProviders.Extension;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-
 namespace BookApp.DataProviders
 {
     public class BookmarksProvider : IBookmarksProvider
-    { 
+    {
         private readonly IRepository<Bookmark> _bookmarksRepository;
         public BookmarksProvider(IRepository<Bookmark> bookmarksRepository)
         {
 
-        _bookmarksRepository = bookmarksRepository;
+            _bookmarksRepository = bookmarksRepository;
         }
         public string AnonymusClass()
         {
             var bookmarks = _bookmarksRepository.GetAll();
-            var list = bookmarks.Select(bookmark => new 
+            var list = bookmarks.Select(bookmark => new
             {
                 Identifier = bookmark.Id,
                 ProductName = bookmark.Name,
-                ProductDimension = bookmark.Dimension
+                ProductDimension = bookmark.Dimension,
+                StandarCosts = bookmark.StandarCost,
+                Colors = bookmark.Color,
+                ListPrices = bookmark.ListPrice
             });
             StringBuilder sb = new(2048);
             foreach (var bookmark in list)
@@ -31,6 +30,10 @@ namespace BookApp.DataProviders
                 sb.AppendLine($"Product ID: {bookmark.Identifier}");
                 sb.AppendLine($"Product Name: {bookmark.ProductName}");
                 sb.AppendLine($"Product Dimension: {bookmark.ProductDimension}");
+                sb.AppendLine($"Product Color: {bookmark.Colors}");
+                sb.AppendLine($"Product StandarCost: {bookmark.StandarCosts}");
+                sb.AppendLine($"Product ListPrice: {bookmark.ListPrices}");
+                sb.AppendLine($"=============================================");
             }
             return sb.ToString();
         }
@@ -106,13 +109,13 @@ namespace BookApp.DataProviders
         public List<Bookmark> WhereStartsWithAndCostIsGreaterThan(string prefix, decimal cost)
         {
             var bookmarks = _bookmarksRepository.GetAll();
-            return bookmarks.Where(x => x.Name.StartsWith(prefix)&& x.StandarCost>cost).ToList();
+            return bookmarks.Where(x => x.Name.StartsWith(prefix) && x.StandarCost > cost).ToList();
         }
 
         public Bookmark FirstByColor(string color)
         {
             var bookmarks = _bookmarksRepository.GetAll();
-            return bookmarks.First(x => x.Color==color);
+            return bookmarks.First(x => x.Color == color);
         }
 
         public Bookmark? FirstOrDefaultByColor(string color)
@@ -190,7 +193,7 @@ namespace BookApp.DataProviders
             return bookmarks
                 .Select(x => x.Color)
                 .Distinct()
-                .OrderBy(c=>c)
+                .OrderBy(c => c)
                 .ToList();
         }
 

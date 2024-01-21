@@ -1,7 +1,7 @@
 ﻿namespace BookApp.UserComunication
 {
-    public interface IUserCommunication 
+    public interface IUserCommunication
     {
-        
+        void CommunicationWithUser();
     }
 }
