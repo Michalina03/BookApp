@@ -1,5 +1,5 @@
 ﻿using System.Text.Json;
-namespace BookApp.Entities.Extension
+namespace BookApp.Data.Entities.Extension
 {
     public static class EntityExtension
     {

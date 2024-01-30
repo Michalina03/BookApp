@@ -1,6 +1,6 @@
-﻿using BookApp.Entities;
+﻿using BookApp.Data.Entities;
 
-namespace BookApp.DataProviders
+namespace BookApp.Components.DataProviders
 {
     public interface IBookmarksProvider
     {

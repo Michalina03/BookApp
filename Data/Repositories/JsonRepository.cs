@@ -1,7 +1,8 @@
 ﻿using System.Text.Json;
 using System;
-using BookApp.Entities;
-namespace BookApp.Repositories
+using BookApp.Data.Entities;
+
+namespace BookApp.Data.Repositories
 {
     public class JsonRepository<T> : IRepository<T>
         where T : class, IEntity, new()

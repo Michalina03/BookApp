@@ -1,6 +1,6 @@
-﻿using BookApp.Entities;
+﻿using BookApp.Data.Entities;
 
-namespace BookApp.Repositories
+namespace BookApp.Data.Repositories
 {
     public interface IReadRepository <out T>
         where T : class, IEntity

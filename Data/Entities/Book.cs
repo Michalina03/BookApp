@@ -1,4 +1,4 @@
-﻿namespace BookApp.Entities
+﻿namespace BookApp.Data.Entities
 {
     public class Book : EntityBase
     {

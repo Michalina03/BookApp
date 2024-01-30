@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using BookApp.Entities;
+using BookApp.Data.Entities;
+
 namespace BookApp.Data
 {
     public class BookAppDbContext : DbContext

@@ -1,6 +1,6 @@
-﻿using BookApp.DataProviders;
-using BookApp.Entities;
-using BookApp.Repositories;
+﻿using BookApp.Components.DataProviders;
+using BookApp.Data.Entities;
+using BookApp.Data.Repositories;
 
 namespace BookApp.UserComunication
 {

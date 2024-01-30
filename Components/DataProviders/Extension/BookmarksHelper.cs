@@ -1,7 +1,7 @@
-﻿using BookApp.Entities;
+﻿using BookApp.Data.Entities;
 using System.Net.Http.Headers;
 
-namespace BookApp.DataProviders.Extension
+namespace BookApp.Components.DataProviders.Extension
 {
     public static class BookmarksHelper
     {

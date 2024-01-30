@@ -1,5 +1,5 @@
 ﻿using System.Text;
-namespace BookApp.Entities
+namespace BookApp.Data.Entities
 {
     public class Bookmark : EntityBase
     {

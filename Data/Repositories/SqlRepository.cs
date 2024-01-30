@@ -1,7 +1,7 @@
-﻿using BookApp.Entities;
+﻿using BookApp.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace BookApp.Repositories
+namespace BookApp.Data.Repositories
 {
     public delegate void Action<in T>(T item);
 

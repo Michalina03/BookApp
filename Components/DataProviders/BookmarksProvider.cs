@@ -1,8 +1,8 @@
-﻿using BookApp.DataProviders.Extension;
-using BookApp.Entities;
-using BookApp.Repositories;
+﻿using BookApp.Components.DataProviders.Extension;
+using BookApp.Data.Entities;
+using BookApp.Data.Repositories;
 using System.Text;
-namespace BookApp.DataProviders
+namespace BookApp.Components.DataProviders
 {
     public class BookmarksProvider : IBookmarksProvider
     {

@@ -1,6 +1,6 @@
-﻿using BookApp.Entities;
+﻿using BookApp.Data.Entities;
 
-namespace BookApp.Repositories.Extension
+namespace BookApp.Data.Repositories.Extension
 {
     public static class ExtensionRepository
     {
