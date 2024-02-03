@@ -14,7 +14,8 @@ namespace BookApp.Components.CsvReader.Extension
                 {
                     Color =columns[0],
                     Height = int.Parse(columns[1]),
-                    Width = int.Parse(columns[2])
+                    Width = int.Parse(columns[2]),
+                    Manufacturer = columns[3]
                 };
             }
         }

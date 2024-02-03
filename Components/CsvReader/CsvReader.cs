@@ -6,7 +6,7 @@ namespace BookApp.Components.CsvReader
     {
         public List<Bookmark> ProcesseBookmark(string filePath)
         {
-            if (File.Exists(filePath))
+            if (!File.Exists(filePath))
             {
                 return new List<Bookmark>();
             }
@@ -19,7 +19,7 @@ namespace BookApp.Components.CsvReader
         }
         public List<Manufacturer> ProcesseManufacturers(string filePath)
         {
-            if (File.Exists(filePath))
+            if (!File.Exists(filePath))
             {
                 return new List<Manufacturer>();
             }
@@ -33,7 +33,8 @@ namespace BookApp.Components.CsvReader
                     {
                         Color = columns[0],
                         Height = int.Parse(columns[1]),
-                        Width = int.Parse(columns[2])
+                        Width = int.Parse(columns[2]),
+                        Shop = columns[3]
                     };
                 });
             return manufacturer.ToList();
