@@ -6,7 +6,7 @@ namespace BookApp.Data
     public class BookAppDbContext : DbContext
     {
         public DbSet<Book> Books => Set<Book>();
-        public DbSet<Textbook> Textbook => Set<Textbook>();
+        public DbSet<Textbook> Textbooks => Set<Textbook>();
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

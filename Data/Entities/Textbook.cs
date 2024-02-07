@@ -2,6 +2,6 @@
 {
     public class Textbook : Book
     {
-        public override string ToString() => base.ToString() + "(TextBook)";
+        public override string ToString() => base.ToString() + "(Textbook)";
     }
 }
