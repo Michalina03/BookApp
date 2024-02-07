@@ -17,7 +17,7 @@ namespace BookApp
 
         public void Run()
         {
-            //_userCommunication.CommunicationWithUser();
+            _userCommunication.CommunicationWithUser();
             CreateXmlFuel();
             QertyXmlFuel();
             CreateXmlManufacturers();

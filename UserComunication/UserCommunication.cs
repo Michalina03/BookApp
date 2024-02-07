@@ -6,7 +6,7 @@ namespace BookApp.UserComunication
 {
     public class UserCommunication : IUserCommunication
     {
-        private readonly IRepository<Book> _bookRepository;
+        private readonly IRepository<Book> _bookRepository ;
         private readonly IRepository<Bookmark> _bookmarksRepository;
         private readonly IBookmarksProvider _bookmarksProvider;
         public UserCommunication(IRepository<Book> bookRepository,
@@ -41,16 +41,16 @@ namespace BookApp.UserComunication
                 switch (choice)
                 {
                     case "1":
-                        Display(bookRepository);
+                        Display();
                         break;
 
                     case "2":
-                        AddNewBook(bookRepository);
+                        AddNewBook();
                         bookRepository.Save();
                         break;
 
                     case "3":
-                        RemoveBook(bookRepository);
+                        RemoveBook();
                         bookRepository.Save();
                         break;
                     case "4":
@@ -72,8 +72,9 @@ namespace BookApp.UserComunication
             }
         }
 
-        private void Display(IReadRepository<IEntity> repository)
+        private void Display()
         {
+            var repository = _bookRepository;
             Console.WriteLine("----- CATALOG -----");
             var items = repository.GetAll();
             if (items.ToList().Count == 0)
@@ -86,10 +87,11 @@ namespace BookApp.UserComunication
             }
         }
 
-        static void AddNewBook(IRepository<Book> bookRepository)
+        private void AddNewBook()
         {
             while (true)
             {
+                var bookRepository = _bookRepository;
                 var input = Console.ReadLine();
                 if (input == "q")
                 {
@@ -109,8 +111,9 @@ namespace BookApp.UserComunication
 
         }
 
-        static void RemoveBook(IRepository<Book> bookRepository)
+        private void RemoveBook()
         {
+            var bookRepository = _bookRepository;
             Console.Write("Enter the ID of the book to remove: ");
             if (int.TryParse(Console.ReadLine(), out int bookId))
             {
