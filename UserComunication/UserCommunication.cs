@@ -1,5 +1,4 @@
-﻿using BookApp.Components.DataProviders;
-using BookApp.Data.Entities;
+﻿using BookApp.Data.Entities;
 using BookApp.Data.Repositories;
 
 namespace BookApp.UserComunication
@@ -8,14 +7,11 @@ namespace BookApp.UserComunication
     {
         private readonly IRepository<Book> _bookRepository ;
         private readonly IRepository<Bookmark> _bookmarksRepository;
-        private readonly IBookmarksProvider _bookmarksProvider;
         public UserCommunication(IRepository<Book> bookRepository,
-            IRepository<Bookmark> bookmarksRepository,
-            IBookmarksProvider bookmarksProvider)
+            IRepository<Bookmark> bookmarksRepository)
         {
             _bookRepository = bookRepository;
             _bookmarksRepository = bookmarksRepository;
-            _bookmarksProvider = bookmarksProvider;
         }
         public void CommunicationWithUser()
         {
@@ -53,15 +49,8 @@ namespace BookApp.UserComunication
                         RemoveBook();
                         bookRepository.Save();
                         break;
+
                     case "4":
-                        BookmarksDisplay();
-                        break;
-
-                    case "5":
-                        BookmarksMetod();
-                        break;
-
-                    case "6":
                         Console.WriteLine("Exiting the program. Goodbye!");
                         return;
 
@@ -126,109 +115,6 @@ namespace BookApp.UserComunication
             {
                 Console.WriteLine("Invalid input. Please enter a valid ID.");
             }
-        }
-        private void BookmarksDisplay()
-        {
-            var bookmarks = GenerateSampleBookmarks();
-            foreach (var item in bookmarks)
-            {
-                _bookmarksRepository.Add(item);
-            }
-            Console.WriteLine(_bookmarksProvider.AnonymusClass());
-        }
-
-        private void BookmarksMetod()
-        {
-            var bookmarks = GenerateSampleBookmarks();
-            foreach (var item in bookmarks)
-            {
-                _bookmarksRepository.Add(item);
-            }
-            Console.WriteLine("====== Bookmarks metod: OrderByName ======");
-            foreach (var item in _bookmarksProvider.OrderByName())
-            {
-                Console.WriteLine(item);
-            }
-            Console.WriteLine("====== Bookmarks metod: DistincAllColor ======");
-            foreach (var item in _bookmarksProvider.DistincAllColor())
-            {
-                Console.WriteLine(item);
-            }
-            Console.WriteLine("====== Bookmarks metod: GetSpecificColumns ======");
-            foreach (var item in _bookmarksProvider.GetSpecificColumns())
-            {
-                Console.WriteLine(item);
-            }
-        }
-
-        public static List<Bookmark> GenerateSampleBookmarks()
-        {
-            return new List<Bookmark>
-            {
-                new Bookmark
-                {
-                    Id = 1,
-                    Name = "Bookmark_1",
-                    Color = "Pink",
-                    StandarCost = 23.99M,
-                    ListPrice = 20.22M,
-                    Dimension = "18cm"
-                },
-                new Bookmark
-                {
-                    Id = 2,
-                    Name = "Bookmark_2",
-                    Color = "Blue",
-                    StandarCost = 26.79M,
-                    ListPrice = 19.22M,
-                    Dimension = "20cm"
-                },
-                new Bookmark
-                {
-                    Id = 3,
-                    Name = "Bookmark_3",
-                    Color = "White",
-                    StandarCost = 31.89M,
-                    ListPrice = 24.52M,
-                    Dimension = "15cm"
-                },
-                new Bookmark
-                {
-                    Id = 4,
-                    Name = "Bookmark_4",
-                    Color = "Black",
-                    StandarCost = 21.99M,
-                    ListPrice = 24.52M,
-                    Dimension = "22cm"
-                },
-                new Bookmark
-                {
-                    Id = 5,
-                    Name = "Bookmark_5",
-                    Color = "Green",
-                    StandarCost = 17.90M,
-                    ListPrice = 25.92M,
-                    Dimension = "25cm"
-                },
-                new Bookmark
-                {
-                    Id = 6,
-                    Name = "Bookmark_6",
-                    Color = "Yelow",
-                    StandarCost = 18.55M,
-                    ListPrice = 19.10M,
-                    Dimension = "15cm"
-                },
-                new Bookmark
-                {
-                    Id = 7,
-                    Name = "Bookmark_7",
-                    Color = "Purple",
-                    StandarCost = 19.10M,
-                    ListPrice = 21.92M,
-                    Dimension = "19cm"
-                }
-            };
         }
     }
 }

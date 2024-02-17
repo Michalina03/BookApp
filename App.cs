@@ -1,6 +1,11 @@
 ﻿using BookApp.Components.CsvReader;
+using BookApp.Data;
 using BookApp.UserComunication;
-using System.Xml.Linq;
+using BookApp.Data.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.SqlServer;
+using BookApp.Components.CsvReader.Models;
+using Bookmark = BookApp.Data.Entities.Bookmark;
 
 namespace BookApp
 {
@@ -8,105 +13,72 @@ namespace BookApp
     {
         private readonly IUserCommunication _userCommunication;
         private readonly ICsvReader _csvReader;
+        private readonly BookAppDbContext _bookAppDbContext;
 
-        public App(IUserCommunication userCommunication, ICsvReader csvReader)
+        public App(IUserCommunication userCommunication, ICsvReader csvReader, BookAppDbContext bookAppDbContext)
         {
             _userCommunication = userCommunication;
             _csvReader = csvReader;
+            _bookAppDbContext = bookAppDbContext;
+            _bookAppDbContext.Database.EnsureCreated();
         }
 
         public void Run()
         {
-            _userCommunication.CommunicationWithUser();
-            CreateXmlFuel();
-            QertyXmlFuel();
-            CreateXmlManufacturers();
-            QertyXmlManufactuers();
-            GroupJoin();
+            //_userCommunication.CommunicationWithUser();
+            //InsertData();
+            //ReadAllBookmarksFromDb();
+            ReadGroupBookmarksFromDb();
         }
 
-        private void CreateXmlFuel()
+        private void ReadGroupBookmarksFromDb()
         {
-            var records = _csvReader.ProcesseBookmark("Resources\\File\\fuel.csv");
+            var groups = _bookAppDbContext
+                .Bookmarks
+                .GroupBy(x => x.Manufacturer)
+                .Select(x => new
+                {
+                    Color = x.Key,
+                    Bookmarks = x.ToList()
+                })
+                .ToList();
 
-            var document = new XDocument();
-            var bookmarks = new XElement("Bookmarks", records
-                .Select(x => new XElement("Bookmark",
-                new XAttribute("Color", x.Color),
-                new XAttribute("Height", x.Height),
-                new XAttribute("Width", x.Width),
-                new XAttribute("Manufactrurer", x.Manufacturer))));
-
-            document.Add(bookmarks);
-            document.Save("fuel.xml");
-        }
-
-        private void QertyXmlFuel()
-        {
-            var document = XDocument.Load("fuel.xml");
-
-            var names = document
-                .Element("Bookmarks")?
-                .Elements("Bookmark");
-
-            foreach (var name in names)
+            foreach (var group in groups)
             {
-                Console.WriteLine(name);
+                Console.WriteLine(group.Color);
+                Console.WriteLine("=================");
+                foreach(var bookmark in group.Bookmarks)
+                {
+                    Console.WriteLine($"Bookmark color: {bookmark.Color}");
+                    Console.WriteLine($"Bookmark id: {bookmark.Id}");
+                }
+                Console.WriteLine();
             }
         }
-
-        private void CreateXmlManufacturers()
+        private void ReadAllBookmarksFromDb()
         {
-            var records = _csvReader.ProcesseManufacturers("Resources\\File\\manufacturers.csv");
-
-            var document = new XDocument();
-            var bookmarks = new XElement("Bookmarks", records
-                .Select(x => new XElement("Bookmark",
-            new XAttribute("Color", x.Color),
-                new XAttribute("Height", x.Height),
-                new XAttribute("Width", x.Width),
-                new XAttribute("Number", x.Number),
-                new XAttribute("Manufactrurer", x.Shop))));
-
-            document.Add(bookmarks);
-            document.Save("manufacturer.xml");
-        }
-
-        private void QertyXmlManufactuers()
-        {
-            var document = XDocument.Load("manufacturer.xml");
-
-            var names = document
-                .Element("Bookmarks")?
-                .Elements("Bookmark");
-
-            foreach (var name in names)
+            var carsFromDb = _bookAppDbContext.Bookmarks.ToList();
+            foreach (var carFromDb in carsFromDb)
             {
-                Console.WriteLine(name);
+                Console.WriteLine($"{carFromDb.Manufacturer} : {carFromDb.Id}");
             }
         }
-
-        private void GroupJoin()
+        private void InsertData()
         {
             var bookmarks = _csvReader.ProcesseBookmark("Resources\\File\\fuel.csv");
-            var manufacturers = _csvReader.ProcesseManufacturers("Resources\\File\\manufacturers.csv");
 
-            var groups = manufacturers.GroupJoin(
-                bookmarks,
-                manufacturers => manufacturers.Color,
-                bookmarks => bookmarks.Manufacturer,
-                (m, b) =>
-                new
-                {
-                    Manufacturer = m,
-                    Bookmarks = b
-                }).OrderBy(x => x.Manufacturer.Color);
-
-            foreach (var bookmark in groups)
+            foreach (var bookmark in bookmarks)
             {
-                Console.WriteLine($"Manufacturer: {bookmark.Manufacturer.Height}");
-                Console.WriteLine($"Count: {bookmark.Bookmarks.Count()}");
+                _bookAppDbContext.Bookmarks.Add(new Bookmark()
+                {
+                    Color = bookmark.Color,
+                    Height = bookmark.Height,
+                    Manufacturer = bookmark.Manufacturer,
+                    Width = bookmark.Width
+
+                });
             }
+            _bookAppDbContext.SaveChanges();
         }
     }
 }
