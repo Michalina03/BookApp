@@ -2,19 +2,19 @@
 
 namespace BookApp.Components.CsvReader.Extension
 {
-    public static class BookmarkExtension
+    public static class BookExtension
     {
-        public static IEnumerable<Bookmark> ToBookmark(this IEnumerable<string >source)
+        public static IEnumerable<Book> ToBookmark(this IEnumerable<string >source)
         {
             foreach (var line in source)
             {
                 var columns = line.Split(',');
 
-                yield return new Bookmark
+                yield return new Book
                 {
-                    Color =columns[0],
-                    Height = int.Parse(columns[1]),
-                    Width = int.Parse(columns[2]),
+                    Title = columns[0],
+                    Author = columns[1],
+                    PublicationDate = columns[2],
                     Manufacturer = columns[3]
                 };
             }

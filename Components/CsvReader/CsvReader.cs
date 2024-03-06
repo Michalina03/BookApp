@@ -4,11 +4,11 @@ namespace BookApp.Components.CsvReader
 {
     public class CsvReader : ICsvReader
     {
-        public List<Bookmark> ProcesseBookmark(string filePath)
+        public List<Book> ProcesseBook(string filePath)
         {
             if (!File.Exists(filePath))
             {
-                return new List<Bookmark>();
+                return new List<Book>();
             }
             var bookmarks = File.ReadAllLines(filePath)
                 .Skip(1)
@@ -16,28 +16,6 @@ namespace BookApp.Components.CsvReader
                 .ToBookmark();
 
             return bookmarks.ToList();
-        }
-        public List<Manufacturer> ProcesseManufacturers(string filePath)
-        {
-            if (!File.Exists(filePath))
-            {
-                return new List<Manufacturer>();
-            }
-            var manufacturer = File.ReadAllLines(filePath)
-                .Where(x => x.Length > 1)
-                .Select(x =>
-                {
-                    var columns = x.Split(',');
-
-                    return new Manufacturer()
-                    {
-                        Color = columns[0],
-                        Height = int.Parse(columns[1]),
-                        Width = int.Parse(columns[2]),
-                        Shop = columns[3]
-                    };
-                });
-            return manufacturer.ToList();
         }
     }
 }

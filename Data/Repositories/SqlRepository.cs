@@ -3,18 +3,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookApp.Data.Repositories
 {
-    public delegate void Action<in T>(T item);
-
     public class SqlRepository<T> : IRepository<T> where T : class, IEntity, new()
     {
 
-        private readonly DbContext _dbContext;
+        private readonly BookAppDbContext _bookAppDbContext;
         private readonly DbSet<T> _dbSet;
 
-        public SqlRepository(DbContext dbContext)
+        public SqlRepository(BookAppDbContext bookAppDbContext)
         {
-            _dbContext = dbContext;
-            _dbSet = dbContext.Set<T>();
+            _bookAppDbContext = bookAppDbContext;
+            _dbSet = bookAppDbContext.Set<T>();
         }
 
         public event EventHandler<T>? ItemAdded;
@@ -22,7 +20,7 @@ namespace BookApp.Data.Repositories
 
         public IEnumerable<T> GetAll()
         {
-            return _dbSet.ToList();
+            return _dbSet.OrderBy(item => item.Id).ToList();
         }
 
         public T GetById(int id)
@@ -33,18 +31,29 @@ namespace BookApp.Data.Repositories
         public void Add(T item)
         {
             _dbSet.Add(item);
+            _bookAppDbContext.SaveChanges();
             ItemAdded?.Invoke(this, item);
         }
 
         public void Remove(T item)
         {
             _dbSet.Remove(item);
+            _bookAppDbContext.SaveChanges();
             ItemRemove?.Invoke(this, item);
         }
 
         public void Save()
         {
-            _dbContext.SaveChanges();
+            _bookAppDbContext.SaveChanges();
+        }
+        public IEnumerable<T> Read()
+        {
+            return _dbSet.ToList();
+        }
+
+        public int GetListCount()
+        {
+            return Read().ToList().Count;
         }
     }
 }

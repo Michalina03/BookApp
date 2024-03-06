@@ -10,6 +10,6 @@ namespace BookApp.Data
         {
 
         }
-        public DbSet<Bookmark> Bookmarks { get; set; }
+        public DbSet<Book> Book { get; set; }
     }
 }

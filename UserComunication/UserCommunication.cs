@@ -1,56 +1,68 @@
-﻿using BookApp.Data.Entities;
+﻿using BookApp.Components.CsvReader;
+using BookApp.Components.CsvReader.Extension;
+using BookApp.Data;
+using BookApp.Data.Entities;
 using BookApp.Data.Repositories;
+using Microsoft.EntityFrameworkCore;
+using System.Numerics;
 
 namespace BookApp.UserComunication
 {
     public class UserCommunication : IUserCommunication
     {
-        private readonly IRepository<Book> _bookRepository ;
-        private readonly IRepository<Bookmark> _bookmarksRepository;
-        public UserCommunication(IRepository<Book> bookRepository,
-            IRepository<Bookmark> bookmarksRepository)
+        private readonly IRepository<Book> _bookRepository;
+        private readonly ICsvReader _csvReader;
+        private readonly BookAppDbContext _bookAppDbContext;
+        public UserCommunication(IRepository<Book> bookRepository, BookAppDbContext bookAppDbContext, ICsvReader csvReader)
         {
             _bookRepository = bookRepository;
-            _bookmarksRepository = bookmarksRepository;
+            _csvReader = csvReader;
+            _bookAppDbContext = bookAppDbContext;
+            _bookAppDbContext.Database.EnsureCreated();
         }
         public void CommunicationWithUser()
         {
 
-            Console.WriteLine("Welcome to BookApp");
-            Console.WriteLine("This program is your library");
-            Console.WriteLine("----------------------------");
-
-            var bookRepository = new JsonRepository<Book>();
+            Console.WriteLine("|========= WELCOME TO BOOKAPP =========|");
+            Console.WriteLine("|                                      |");
+            Console.WriteLine("|     This program is your library     |");
+            Console.WriteLine("|                                      |");
 
 
             while (true)
             {
-                Console.WriteLine("-------- MENU ---------");
-                Console.WriteLine("1. to display a books");
-                Console.WriteLine("2. to add a book");
-                Console.WriteLine("3. to remove a books");
-                Console.WriteLine("4. to display bookmarks");
-                Console.WriteLine("5. to run metods bookmarks");
-                Console.WriteLine("6. exiting the program");
+                Console.WriteLine("|---------------- MENU ----------------|");
+                Console.WriteLine("|                                      |");
+                Console.WriteLine("|          1. Read all books           |");
+                Console.WriteLine("|          2. Add a book               |");
+                Console.WriteLine("|          3. Remove a book            |");
+                Console.WriteLine("|          4. Edition a book           |");
+                Console.WriteLine("|          5. Exiting the program      |");
+                Console.WriteLine("|                                      |");
+                Console.WriteLine("|--------------------------------------|");
+
                 var choice = Console.ReadLine();
+
 
                 switch (choice)
                 {
                     case "1":
-                        Display();
+                        ReadAllBookFromDb();
                         break;
 
                     case "2":
-                        AddNewBook();
-                        bookRepository.Save();
+                        AddBook();
                         break;
 
                     case "3":
                         RemoveBook();
-                        bookRepository.Save();
                         break;
 
                     case "4":
+                        EditionBook("73");
+                        break;
+
+                    case "5":
                         Console.WriteLine("Exiting the program. Goodbye!");
                         return;
 
@@ -60,61 +72,105 @@ namespace BookApp.UserComunication
                 }
             }
         }
-
-        private void Display()
+        private void ReadAllBookFromDb()
         {
-            var repository = _bookRepository;
-            Console.WriteLine("----- CATALOG -----");
-            var items = repository.GetAll();
-            if (items.ToList().Count == 0)
+            var booksFromDb = _bookAppDbContext.Book.ToList();
+            foreach (var bookFromDb in booksFromDb)
             {
-                Console.WriteLine("No objects found!");
-            }
-            foreach (var item in items)
-            {
-                Console.WriteLine(item);
+                Console.WriteLine($"Title: {bookFromDb.Title}");
+                Console.WriteLine($"Author: {bookFromDb.Author}");
+                Console.WriteLine($"PublicationDate: {bookFromDb.PublicationDate}");
+                Console.WriteLine($"Manufacturer: {bookFromDb.Manufacturer}");
+                Console.WriteLine();
             }
         }
-
-        private void AddNewBook()
+        public void AddBook()
         {
-            while (true)
-            {
-                var bookRepository = _bookRepository;
-                var input = Console.ReadLine();
-                if (input == "q")
-                {
-                    break;
-                }
+            Console.WriteLine("Insert title");
+            var title = Console.ReadLine();
+            Console.WriteLine("Insert author");
+            var author = Console.ReadLine();
+            Console.WriteLine("Insert publication date");
+            var publicationDate = Console.ReadLine();
+            Console.WriteLine("Insert manufacturer");
+            var manufacturer = Console.ReadLine();
+            Book bookFromDb = new Book { Title = title, Author = author, PublicationDate = publicationDate, Manufacturer = manufacturer};
 
-                try
-                {
-                    bookRepository.Add(new Book { Title = input });
-                    bookRepository.Save();
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine($"Exception catch {e.Message}");
-                }
-            }
-
+            _bookAppDbContext.Add(bookFromDb);
+            _bookAppDbContext.SaveChanges();
         }
-
-        private void RemoveBook()
+        public void RemoveBook()
         {
-            var bookRepository = _bookRepository;
-            Console.Write("Enter the ID of the book to remove: ");
-            if (int.TryParse(Console.ReadLine(), out int bookId))
+            Console.WriteLine("Insert game ID");
+            var bookId = BookLogicExtension.ConvertStringToInteger(Console.ReadLine());
+            Book bookRepository = _bookRepository.GetById(bookId);
+            if (bookRepository != null)
             {
-                var bookToRemove = bookRepository.GetById(bookId);
-
-                if (bookToRemove != null)
-                    bookRepository.Remove(bookToRemove);
+                _bookRepository.Remove(bookRepository);
+                _bookRepository.Save();
+                Console.WriteLine($"Game with Id: {bookId} removed");
             }
             else
             {
-                Console.WriteLine("Invalid input. Please enter a valid ID.");
+                throw new Exception("Id number does not exist!");
             }
         }
+
+        public void EditionBook(string id)
+        {
+
+            var bookRepository = _bookRepository.GetById(BookLogicExtension.ConvertStringToInteger(id));
+            Console.WriteLine("=========================================");
+            Console.WriteLine("What would you like to change?");
+            Console.WriteLine("\nA => Title\nB => Author\nC => Publication date\nD => Manufacturer");
+            var input = Console.ReadLine().ToUpper();
+            if (bookRepository != null)
+            {
+                switch (input)
+                {
+                    case "A":
+                        Console.WriteLine("Insert new title");
+                        var title = Console.ReadLine();
+                        bookRepository.Title = title;
+                        break;
+                    case "B":
+                        Console.WriteLine("Insert new author");
+                        var author = Console.ReadLine();
+                        bookRepository.Author = author;
+                        break;
+                    case "C":
+                        Console.WriteLine("Insert new publication date");
+                        var publicationDate = Console.ReadLine();
+                        bookRepository.PublicationDate = publicationDate;
+                        break;
+                    case "D":
+                        Console.WriteLine("Insert new manofacturer");
+                        var manufacturer = Console.ReadLine();
+                        bookRepository.Manufacturer = manufacturer;
+                        break;
+                    default:
+                        throw new Exception("Wrong letter!");
+                }
+            }
+            Console.WriteLine($"Book with Id: {id} updated");
+            _bookRepository.Save();
+        }
+
+        //private void EnteringData()
+        //{
+        //    var book = _csvReader.ProcesseBook("Resources\\File\\books.csv");
+
+        //    foreach (var books in book)
+        //    {
+        //        _bookAppDbContext.Book.Add(new Book()
+        //        {
+        //            Title = books.Title,
+        //            Author = books.Author,
+        //            PublicationDate = books.PublicationDate,
+        //            Manufacturer = books.Manufacturer
+        //        });
+        //    }
+        //    _bookAppDbContext.SaveChanges();
+        //}
     }
 }

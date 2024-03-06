@@ -9,12 +9,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 var services = new ServiceCollection();
 services.AddSingleton<IApp, App>();
-services.AddSingleton<IRepository<Book>, JsonRepository<Book>>();
-services.AddSingleton<IRepository<Bookmark>, JsonRepository<Bookmark>>();
+services.AddSingleton<IRepository<Book>, SqlRepository<Book>>();
 services.AddSingleton<IUserCommunication, UserCommunication>();
 services.AddSingleton<ICsvReader, CsvReader>();
 services.AddDbContext<BookAppDbContext>(options => options.UseSqlServer("Data Source = DESKTOP-PQLADNG\\SQLEXPRESS01; Initial Catalog = BookAppStorage; Integrated Security = True"));
-//Data Source=DESKTOP-PQLADNG\SQLEXPRESS01;Initial Catalog=TestStorage;Integrated Security=True
+
 
 var servicesProvider = services.BuildServiceProvider();
 
