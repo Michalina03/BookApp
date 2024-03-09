@@ -72,15 +72,16 @@ namespace BookApp.UserComunication
                 }
             }
         }
-        private void ReadAllBookFromDb()
+        public void ReadAllBookFromDb()
         {
-            var booksFromDb = _bookAppDbContext.Book.ToList();
-            foreach (var bookFromDb in booksFromDb)
+            var bookRepository = _bookRepository.GetAll();
+            foreach (var bookFromDb in bookRepository)
             {
                 Console.WriteLine($"Title: {bookFromDb.Title}");
                 Console.WriteLine($"Author: {bookFromDb.Author}");
                 Console.WriteLine($"PublicationDate: {bookFromDb.PublicationDate}");
                 Console.WriteLine($"Manufacturer: {bookFromDb.Manufacturer}");
+                Console.WriteLine();
                 Console.WriteLine();
             }
         }
@@ -96,8 +97,8 @@ namespace BookApp.UserComunication
             var manufacturer = Console.ReadLine();
             Book bookFromDb = new Book { Title = title, Author = author, PublicationDate = publicationDate, Manufacturer = manufacturer};
 
-            _bookAppDbContext.Add(bookFromDb);
-            _bookAppDbContext.SaveChanges();
+            _bookRepository.Add(bookFromDb);
+            _bookRepository.Save();
         }
         public void RemoveBook()
         {
@@ -155,22 +156,5 @@ namespace BookApp.UserComunication
             Console.WriteLine($"Book with Id: {id} updated");
             _bookRepository.Save();
         }
-
-        //private void EnteringData()
-        //{
-        //    var book = _csvReader.ProcesseBook("Resources\\File\\books.csv");
-
-        //    foreach (var books in book)
-        //    {
-        //        _bookAppDbContext.Book.Add(new Book()
-        //        {
-        //            Title = books.Title,
-        //            Author = books.Author,
-        //            PublicationDate = books.PublicationDate,
-        //            Manufacturer = books.Manufacturer
-        //        });
-        //    }
-        //    _bookAppDbContext.SaveChanges();
-        //}
     }
 }
