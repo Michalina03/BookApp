@@ -5,7 +5,6 @@ namespace BookApp.Data.Repositories
 {
     public class SqlRepository<T> : IRepository<T> where T : class, IEntity, new()
     {
-
         private readonly BookAppDbContext _bookAppDbContext;
         private readonly DbSet<T> _dbSet;
 

@@ -1,5 +1,4 @@
 ﻿using BookApp.Components.CsvReader.Models;
-
 namespace BookApp.Components.CsvReader.Extension
 {
     public static class BookExtension

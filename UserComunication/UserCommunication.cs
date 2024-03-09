@@ -11,12 +11,10 @@ namespace BookApp.UserComunication
     public class UserCommunication : IUserCommunication
     {
         private readonly IRepository<Book> _bookRepository;
-        private readonly ICsvReader _csvReader;
         private readonly BookAppDbContext _bookAppDbContext;
-        public UserCommunication(IRepository<Book> bookRepository, BookAppDbContext bookAppDbContext, ICsvReader csvReader)
+        public UserCommunication(IRepository<Book> bookRepository, BookAppDbContext bookAppDbContext)
         {
             _bookRepository = bookRepository;
-            _csvReader = csvReader;
             _bookAppDbContext = bookAppDbContext;
             _bookAppDbContext.Database.EnsureCreated();
         }
@@ -119,7 +117,6 @@ namespace BookApp.UserComunication
 
         public void EditionBook(string id)
         {
-
             var bookRepository = _bookRepository.GetById(BookLogicExtension.ConvertStringToInteger(id));
             Console.WriteLine("=========================================");
             Console.WriteLine("What would you like to change?");
