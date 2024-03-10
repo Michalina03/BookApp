@@ -72,8 +72,8 @@ namespace BookApp.UserComunication
         }
         public void ReadAllBookFromDb()
         {
-            var bookRepository = _bookRepository.GetAll();
-            foreach (var bookFromDb in bookRepository)
+            var books = _bookRepository.GetAll();
+            foreach (var bookFromDb in books)
             {
                 Console.WriteLine($"Title: {bookFromDb.Title}");
                 Console.WriteLine($"Author: {bookFromDb.Author}");
@@ -102,10 +102,10 @@ namespace BookApp.UserComunication
         {
             Console.WriteLine("Insert game ID");
             var bookId = BookLogicExtension.ConvertStringToInteger(Console.ReadLine());
-            Book bookRepository = _bookRepository.GetById(bookId);
-            if (bookRepository != null)
+            Book book = _bookRepository.GetById(bookId);
+            if (book != null)
             {
-                _bookRepository.Remove(bookRepository);
+                _bookRepository.Remove(book);
                 _bookRepository.Save();
                 Console.WriteLine($"Game with Id: {bookId} removed");
             }
@@ -117,34 +117,34 @@ namespace BookApp.UserComunication
 
         public void EditionBook(string id)
         {
-            var bookRepository = _bookRepository.GetById(BookLogicExtension.ConvertStringToInteger(id));
+            var bookId = _bookRepository.GetById(BookLogicExtension.ConvertStringToInteger(id));
             Console.WriteLine("=========================================");
             Console.WriteLine("What would you like to change?");
             Console.WriteLine("\nA => Title\nB => Author\nC => Publication date\nD => Manufacturer");
             var input = Console.ReadLine().ToUpper();
-            if (bookRepository != null)
+            if (bookId != null)
             {
                 switch (input)
                 {
                     case "A":
                         Console.WriteLine("Insert new title");
                         var title = Console.ReadLine();
-                        bookRepository.Title = title;
+                        bookId.Title = title;
                         break;
                     case "B":
                         Console.WriteLine("Insert new author");
                         var author = Console.ReadLine();
-                        bookRepository.Author = author;
+                        bookId.Author = author;
                         break;
                     case "C":
                         Console.WriteLine("Insert new publication date");
                         var publicationDate = Console.ReadLine();
-                        bookRepository.PublicationDate = publicationDate;
+                        bookId.PublicationDate = publicationDate;
                         break;
                     case "D":
                         Console.WriteLine("Insert new manofacturer");
                         var manufacturer = Console.ReadLine();
-                        bookRepository.Manufacturer = manufacturer;
+                        bookId.Manufacturer = manufacturer;
                         break;
                     default:
                         throw new Exception("Wrong letter!");
