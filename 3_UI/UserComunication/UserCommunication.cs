@@ -1,10 +1,7 @@
-﻿using BookApp.Components.CsvReader;
-using BookApp.Components.CsvReader.Extension;
+﻿using BookApp.Components.CsvReader.Extension;
 using BookApp.Data;
 using BookApp.Data.Entities;
 using BookApp.Data.Repositories;
-using Microsoft.EntityFrameworkCore;
-using System.Numerics;
 
 namespace BookApp.UserComunication
 {
@@ -93,7 +90,7 @@ namespace BookApp.UserComunication
             var publicationDate = Console.ReadLine();
             Console.WriteLine("Insert manufacturer");
             var manufacturer = Console.ReadLine();
-            Book bookFromDb = new Book { Title = title, Author = author, PublicationDate = publicationDate, Manufacturer = manufacturer};
+            Book bookFromDb = new Book { Title = title, Author = author, PublicationDate = publicationDate, Manufacturer = manufacturer };
 
             _bookRepository.Add(bookFromDb);
             _bookRepository.Save();
@@ -117,34 +114,34 @@ namespace BookApp.UserComunication
 
         public void EditionBook(string id)
         {
-            var bookId = _bookRepository.GetById(BookLogicExtension.ConvertStringToInteger(id));
+            var book = _bookRepository.GetById(BookLogicExtension.ConvertStringToInteger(id));
             Console.WriteLine("=========================================");
             Console.WriteLine("What would you like to change?");
             Console.WriteLine("\nA => Title\nB => Author\nC => Publication date\nD => Manufacturer");
             var input = Console.ReadLine().ToUpper();
-            if (bookId != null)
+            if (book != null)
             {
                 switch (input)
                 {
                     case "A":
                         Console.WriteLine("Insert new title");
                         var title = Console.ReadLine();
-                        bookId.Title = title;
+                        book.Title = title;
                         break;
                     case "B":
                         Console.WriteLine("Insert new author");
                         var author = Console.ReadLine();
-                        bookId.Author = author;
+                        book.Author = author;
                         break;
                     case "C":
                         Console.WriteLine("Insert new publication date");
                         var publicationDate = Console.ReadLine();
-                        bookId.PublicationDate = publicationDate;
+                        book.PublicationDate = publicationDate;
                         break;
                     case "D":
                         Console.WriteLine("Insert new manofacturer");
                         var manufacturer = Console.ReadLine();
-                        bookId.Manufacturer = manufacturer;
+                        book.Manufacturer = manufacturer;
                         break;
                     default:
                         throw new Exception("Wrong letter!");
